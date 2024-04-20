@@ -1,5 +1,6 @@
 package com.getir.finalcase.presentation.product_list
 
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -38,6 +39,8 @@ class ProductListAdapter(private var dataSet: List<Product>) :
 
     override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
         val product = dataSet[position]
+        Log.v("selen","deneme")
+        product.name?.let { Log.v("selen", it) }
         viewHolder.textViewName.text = product.name
         viewHolder.textViewAttribute.text = product.attribute
         viewHolder.textViewPrice.text = product.priceText.toString()

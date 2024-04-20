@@ -43,7 +43,7 @@ class ProductListFragment : Fragment() {
         fetchProducts()
 
         val recyclerView = binding.productsRecyclerView
-        val adapter = ProductListAdapter(emptyList())
+        adapter = ProductListAdapter(emptyList())
         recyclerView.adapter = adapter
     }
     fun onAddButtonClick(product: Product) {
