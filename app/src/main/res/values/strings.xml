@@ -1,4 +1,7 @@
 <resources>
     <string name="app_name">Getir Final Case</string>
     <string name="title_products">Ürünler</string>
+    <string name="title_product_details">Ürün Detayı</string>
+    <string name="product_image">Product Image</string>
+
 </resources>
