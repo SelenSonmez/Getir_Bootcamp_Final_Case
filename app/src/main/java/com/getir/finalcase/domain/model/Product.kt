@@ -2,28 +2,53 @@ package com.getir.finalcase.domain.model
 
 import com.google.gson.annotations.SerializedName
 
-class Product {
-    @SerializedName("id")
-     val id: String? = null
+import android.os.Parcel
+import android.os.Parcelable
 
-    @SerializedName("name")
-     val name: String? = null
+data class Product(
+    @SerializedName("id") val id: String? = null,
+    @SerializedName("name") val name: String? = null,
+    @SerializedName("attribute") val attribute: String? = null,
+    @SerializedName("thumbnailURL") val thumbnailURL: String? = null,
+    @SerializedName("imageURL") val imageURL: String? = null,
+    @SerializedName("price") val price: Double = 0.0,
+    @SerializedName("priceText") val priceText: String? = null
+) : Parcelable {
+    constructor(parcel: Parcel) : this(
+        parcel.readString(),
+        parcel.readString(),
+        parcel.readString(),
+        parcel.readString(),
+        parcel.readString(),
+        parcel.readDouble(),
+        parcel.readString()
+    )
 
-    @SerializedName("attribute")
-     val attribute: String? = null
+    override fun writeToParcel(parcel: Parcel, flags: Int) {
+        parcel.writeString(id)
+        parcel.writeString(name)
+        parcel.writeString(attribute)
+        parcel.writeString(thumbnailURL)
+        parcel.writeString(imageURL)
+        parcel.writeDouble(price)
+        parcel.writeString(priceText)
+    }
 
-    @SerializedName("thumbnailURL")
-     val thumbnailURL: String? = null
+    override fun describeContents(): Int {
+        return 0
+    }
 
-    @SerializedName("imageURL")
-     val imageURL: String? = null
+    companion object CREATOR : Parcelable.Creator<Product> {
+        override fun createFromParcel(parcel: Parcel): Product {
+            return Product(parcel)
+        }
 
-    @SerializedName("price")
-     val price = 0.0
-
-    @SerializedName("priceText")
-     val priceText: String? = null // Getters and setters
+        override fun newArray(size: Int): Array<Product?> {
+            return arrayOfNulls(size)
+        }
+    }
 }
+
 
 class ProductCategory {
     @SerializedName("id")
