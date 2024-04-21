@@ -4,20 +4,31 @@
     android:layout_height="?attr/actionBarSize"
     android:background="?attr/colorPrimary">
 
+    <!-- Back Button -->
+    <ImageButton
+        android:id="@+id/backButton"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:src="@drawable/ic_back_button"
+        android:visibility="invisible"
+        android:background="?android:attr/selectableItemBackground" />
+
+    <!-- Title -->
     <TextView
         android:id="@+id/toolbar_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:textColor="@android:color/white"
         android:textSize="18sp"
-        android:text="@string/title_products"
         android:textStyle="bold"
         android:layout_gravity="center_horizontal"/>
 
     <LinearLayout
+        android:id="@+id/container_basket"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/_5sdp"
+        android:visibility="gone"
         android:background="@drawable/total_background"
         android:padding="@dimen/_4ssp"
         android:layout_gravity="end">
@@ -32,7 +43,7 @@
             android:layout_height="wrap_content"
             android:text="₺100.24"
             android:textStyle="bold"
-            android:textColor="@color/purple_700"
+            android:textColor="@color/primary_color"
             android:layout_gravity="center_vertical"/>
 
     </LinearLayout>
