@@ -1,55 +1,62 @@
 package com.getir.finalcase.presentation.product_list
 
-import android.util.Log
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
-import android.widget.ImageView
-import android.widget.TextView
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.getir.finalcase.R
+import com.getir.finalcase.databinding.ItemProductBinding
 import com.getir.finalcase.domain.model.Product
 
-class ProductListAdapter(private var dataSet: List<Product>) :
+class ProductListAdapter(
+    private var dataSet: List<Product>,
+    private val onItemClick: (Product) -> Unit) :
     RecyclerView.Adapter<ProductListAdapter.ViewHolder>() {
 
-    class ViewHolder(view: View) : RecyclerView.ViewHolder(view) {
-        val textViewName: TextView
-        val textViewAttribute: TextView
-        val textViewPrice: TextView
-        val imageView: ImageView
+    // ViewHolder class holds references to views within each item of the RecyclerView
+    class ViewHolder(private val binding: ItemProductBinding) :
+        RecyclerView.ViewHolder(binding.root) {
 
+        // Bind method to populate views with data
+        fun bind(product: Product,onItemClick: (Product) -> Unit) {
+            // Use data binding to set data to views
+            binding.apply {
+                textViewAttribute.text = product.attribute
+                textViewPrice.text = product.priceText.toString()
 
-        init {
-            textViewName = view.findViewById(R.id.textViewName)
-            textViewAttribute = view.findViewById(R.id.textViewAttribute)
-            textViewPrice = view.findViewById(R.id.textViewPrice)
-            imageView = view.findViewById(R.id.productImage)
+                // If the product name exceeds length 30
+                val maxProductNameLength = 30
+                val displayName = if (product.name!!.length > maxProductNameLength) {
+                    "${product.name.substring(0, maxProductNameLength)}..."
+                } else {
+                    product.name // Keep the original name
+                }
+                textViewName.text = displayName
 
+                // Load image using Glide library
+                Glide.with(root)
+                    .load(product.imageURL)
+                    .into(productImage)
+
+                root.setOnClickListener { onItemClick(product) }
+            }
         }
     }
-    override fun onCreateViewHolder(viewGroup: ViewGroup, viewType: Int): ViewHolder {
-        // Create a new view, which defines the UI of the list item
-        val view = LayoutInflater.from(viewGroup.context)
-            .inflate(R.layout.product_item, viewGroup, false)
 
-        return ViewHolder(view)
+    // Create ViewHolder instances
+    override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
+        // Inflate layout using data binding
+        val inflater = LayoutInflater.from(parent.context)
+        val binding = ItemProductBinding.inflate(inflater, parent, false)
+        return ViewHolder(binding)
     }
 
-    override fun onBindViewHolder(viewHolder: ViewHolder, position: Int) {
+    // Bind data to views in each item
+    override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val product = dataSet[position]
-        Log.v("selen","deneme")
-        product.name?.let { Log.v("selen", it) }
-        viewHolder.textViewName.text = product.name
-        viewHolder.textViewAttribute.text = product.attribute
-        viewHolder.textViewPrice.text = product.priceText.toString()
-        Glide.with(viewHolder.itemView.context)
-            .load(product.imageURL)
-            .into(viewHolder.imageView)
+        holder.bind(product,onItemClick)
     }
 
-
+    // Update dataset with new list of products
     fun updateProducts(productList: List<Product>) {
         dataSet = productList
         notifyDataSetChanged()
@@ -57,8 +64,4 @@ class ProductListAdapter(private var dataSet: List<Product>) :
 
     // Return the size of dataset
     override fun getItemCount() = dataSet.size
-
-
 }
-
-
