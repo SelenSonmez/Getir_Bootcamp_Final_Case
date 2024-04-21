@@ -4,26 +4,26 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.RecyclerView
 import com.getir.finalcase.R
 import com.getir.finalcase.common.domain.ViewState
-import com.getir.finalcase.databinding.ProductListBinding
+import com.getir.finalcase.databinding.FragmentProductListBinding
 import com.getir.finalcase.domain.model.Product
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.flow.collect
 import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class ProductListFragment : Fragment() {
 
-    private lateinit var binding: ProductListBinding
-    private lateinit var bindingProduct: ProductListBinding
+    private lateinit var binding: FragmentProductListBinding
+    private lateinit var bindingProduct: FragmentProductListBinding
 
     private lateinit var adapter: ProductListAdapter
     private val viewModel: ProductListViewModel by viewModels()
@@ -32,7 +32,7 @@ class ProductListFragment : Fragment() {
         inflater: LayoutInflater, container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View {
-        binding = ProductListBinding.inflate(inflater, container, false)
+        binding = FragmentProductListBinding.inflate(inflater, container, false)
         return binding.root
     }
 
@@ -42,21 +42,26 @@ class ProductListFragment : Fragment() {
         observeProductList()
         fetchProducts()
 
-        val recyclerView = binding.productsRecyclerView
-        adapter = ProductListAdapter(emptyList())
-        recyclerView.adapter = adapter
+        binding.toolbar.toolbarTitle.text = getString(R.string.title_products)
+        binding.toolbar.containerBasket.visibility = VISIBLE
     }
     fun onAddButtonClick(product: Product) {
         // Update the count of the specific item
-        // For example, you can update the item count in the ViewModel
         //viewModel.increaseItemCount(product)
     }
     private fun setupRecyclerView() {
-        adapter = ProductListAdapter(emptyList())
+        adapter = ProductListAdapter(emptyList(),::onItemClicked)
         binding.productsRecyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
         binding.productsRecyclerView.adapter = adapter
     }
 
+    private fun onItemClicked(product: Product) {
+        navigateToProductDetails(product)
+    }
+    private fun navigateToProductDetails(product: Product) {
+        val action = ProductListFragmentDirections.actionProductListFragmentToProductDetailsFragment(product)
+        findNavController().navigate(action)
+    }
     private fun observeProductList() {
         viewLifecycleOwner.lifecycleScope.launch {
             viewModel.uiStateProduct.collect { state ->
