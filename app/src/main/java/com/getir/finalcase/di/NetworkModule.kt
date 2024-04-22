@@ -26,11 +26,7 @@ object NetworkModule {
         val logging = HttpLoggingInterceptor()
         logging.level = HttpLoggingInterceptor.Level.BODY
         return logging
-//        logging.level = if (BuildConfig.DEBUG) HttpLoggingInterceptor.Level.BODY
-//        else HttpLoggingInterceptor.Level.NONE
-//        return logging
     }
-
 
     @Provides
     @Singleton

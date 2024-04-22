@@ -18,10 +18,6 @@ class RepositoryModule {
         apiService: ApiService,
         @IoDispatcher ioDispatcher: CoroutineDispatcher
     ) = ProductListRepository(apiService,ioDispatcher)
-
-
-
-
   /*  @Provides
     fun provideFoodRepository(
         apiService: ApiService,
@@ -35,31 +31,4 @@ class RepositoryModule {
         @IoDispatcher ioDispatcher: CoroutineDispatcher
     ) = OrderRepository(apiService,ioDispatcher)*/
 
-
-
-
-
 }
-
-/*
-package com.getir.finalcase.di
-
-import com.getir.finalcase.data.repository.ProductListRepositoryImpl
-import com.getir.finalcase.domain.repository.ProductListRepository
-import dagger.Binds
-import dagger.Module
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
-
-@Module
-@InstallIn(SingletonComponent::class)
-abstract class RepositoryModule {
-
-    @Binds
-    @Singleton
-
-    abstract fun bindProductListRepository(
-        productListRepositoryImpl:ProductListRepositoryImpl
-    ): ProductListRepository
-}*/

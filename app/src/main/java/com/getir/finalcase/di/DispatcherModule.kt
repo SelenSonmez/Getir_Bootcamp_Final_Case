@@ -27,7 +27,6 @@ object DispatcherModule {
 
 }
 
-
 @Retention(AnnotationRetention.BINARY)
 @Qualifier
 annotation class DefaultDispatcher
