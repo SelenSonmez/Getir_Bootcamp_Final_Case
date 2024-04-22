@@ -9,7 +9,9 @@ import com.getir.finalcase.domain.model.Product
 
 class ProductListAdapter(
     private var dataSet: List<Product>,
-    private val onItemClick: (Product) -> Unit) :
+    private val onItemClick: (Product) -> Unit,
+    private val onAddButtonClick: (Product) -> Unit
+) :
     RecyclerView.Adapter<ProductListAdapter.ViewHolder>() {
 
     // ViewHolder class holds references to views within each item of the RecyclerView
@@ -17,7 +19,7 @@ class ProductListAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         // Bind method to populate views with data
-        fun bind(product: Product,onItemClick: (Product) -> Unit) {
+        fun bind(product: Product,onItemClick: (Product) -> Unit, onAddButtonClick: (Product) ->Unit) {
             // Use data binding to set data to views
             binding.apply {
                 textViewAttribute.text = product.attribute
@@ -37,6 +39,11 @@ class ProductListAdapter(
                     .load(product.imageURL)
                     .into(productImage)
 
+                addBtn.setOnClickListener {
+                    // Call the onAddButtonClick callback when the add button is clicked
+                    onAddButtonClick(product)
+                }
+
                 root.setOnClickListener { onItemClick(product) }
             }
         }
@@ -53,7 +60,7 @@ class ProductListAdapter(
     // Bind data to views in each item
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val product = dataSet[position]
-        holder.bind(product,onItemClick)
+        holder.bind(product,onItemClick,onAddButtonClick)
     }
 
     // Update dataset with new list of products

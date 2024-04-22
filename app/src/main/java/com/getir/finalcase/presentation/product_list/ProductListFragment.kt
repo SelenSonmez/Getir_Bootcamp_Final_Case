@@ -1,7 +1,6 @@
 package com.getir.finalcase.presentation.product_list
 
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.VISIBLE
@@ -18,13 +17,13 @@ import com.getir.finalcase.domain.model.Product
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.coroutines.launch
+import androidx.lifecycle.observe
+
 
 @AndroidEntryPoint
 class ProductListFragment : Fragment() {
 
     private lateinit var binding: FragmentProductListBinding
-    private lateinit var bindingProduct: FragmentProductListBinding
-
     private lateinit var adapter: ProductListAdapter
     private val viewModel: ProductListViewModel by viewModels()
 
@@ -44,13 +43,29 @@ class ProductListFragment : Fragment() {
 
         binding.toolbar.toolbarTitle.text = getString(R.string.title_products)
         binding.toolbar.containerBasket.visibility = VISIBLE
+        observeBasketAdditionState()
     }
-    fun onAddButtonClick(product: Product) {
-        // Update the count of the specific item
-        //viewModel.increaseItemCount(product)
+
+    private fun observeBasketAdditionState() {
+        viewLifecycleOwner.lifecycleScope.launch {
+            viewModel.uiStateBasketAddition.collect { state ->
+                when (state) {
+                    is ViewState.Loading -> {
+                        binding.loadingProgressBar.visibility = View.VISIBLE
+                    }
+                    is ViewState.Success -> {
+                        binding.loadingProgressBar.visibility = View.GONE
+                        Snackbar.make(requireView(), state.result, Snackbar.LENGTH_SHORT).show()
+                    }
+                    is ViewState.Error -> {
+                        Snackbar.make(requireView(), "Error: ${state.error}", Snackbar.LENGTH_SHORT).show()
+                    }
+                }
+            }
+        }
     }
     private fun setupRecyclerView() {
-        adapter = ProductListAdapter(emptyList(),::onItemClicked)
+        adapter = ProductListAdapter(emptyList(),::onItemClicked,::onAddButtonClick)
         binding.productsRecyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
         binding.productsRecyclerView.adapter = adapter
     }
@@ -58,6 +73,11 @@ class ProductListFragment : Fragment() {
     private fun onItemClicked(product: Product) {
         navigateToProductDetails(product)
     }
+
+    private fun onAddButtonClick(product: Product) {
+        addToBasket(product)
+    }
+
     private fun navigateToProductDetails(product: Product) {
         val action = ProductListFragmentDirections.actionProductListFragmentToProductDetailsFragment(product)
         findNavController().navigate(action)
@@ -90,5 +110,8 @@ class ProductListFragment : Fragment() {
 
     private fun fetchProducts() {
         viewModel.getAllProducts()
+    }
+    private fun addToBasket(product: Product) {
+        viewModel.addProductToBasketIfFound(product = product)
     }
 }
