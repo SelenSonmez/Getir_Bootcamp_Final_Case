@@ -1,5 +1,7 @@
 package com.getir.finalcase.di
 
+import com.getir.finalcase.data.local.database.BasketRoomDatabase
+import com.getir.finalcase.data.local.database.dao.BasketProductDao
 import com.getir.finalcase.data.remote.ApiService
 import com.getir.finalcase.domain.repository.ProductListRepository
 import com.getir.finalcase.presentation.HiltApp
@@ -13,6 +15,13 @@ import javax.inject.Singleton
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
+
+    @Provides
+    @Singleton // Optional: Add scoping if needed
+    fun provideBasketProductDao(database: BasketRoomDatabase): BasketProductDao {
+        return database.basketProductDao()
+    }
+
    /*  @Provides
     @Singleton
     fun provideMyApi():ApiService {
