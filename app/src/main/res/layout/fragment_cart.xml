@@ -1,0 +1,84 @@
+<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent">
+
+    <!-- Toolbar -->
+    <include
+        android:id="@+id/toolbar"
+        layout="@layout/toolbar_layout"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_marginBottom="621dp"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+    <!-- Recycler View -->
+    <androidx.recyclerview.widget.RecyclerView
+        android:id="@+id/productsRecyclerView"
+        android:layout_width="0dp"
+        android:layout_height="0dp"
+        android:layout_margin="@dimen/_12sdp"
+        android:layout_marginStart="15dp"
+        android:layout_marginEnd="15dp"
+        app:layout_constraintBottom_toTopOf="@id/linearLayout"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar" />
+
+    <!-- Gradient View between button and attribute text -->
+    <View
+        android:id="@+id/gradientSpace"
+        android:layout_width="0dp"
+        android:layout_height="50dp"
+        android:layout_marginBottom="@dimen/_15sdp"
+        android:background="@drawable/divider_shadow"
+        app:layout_constraintBottom_toTopOf="@+id/linearLayout"
+        />
+
+
+    <!-- Group for Button and TextView -->
+    <LinearLayout
+        android:id="@+id/linearLayout"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:gravity="center"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/toolbar"
+        android:layout_marginHorizontal="@dimen/_50sdp"
+        android:layout_marginBottom="@dimen/_15sdp"
+        >
+
+        <!-- Complete Order Button -->
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btnCompleteOrder"
+            android:layout_width="250dp"
+            android:layout_height="48dp"
+            android:background="@drawable/button_finish_order"
+            android:padding="@dimen/_10sdp"
+            android:textStyle="bold"
+            android:text="@string/sipari_i_tamamla"
+            android:textSize="12sp"
+            android:textColor="@color/white" />
+
+        <!-- Total Price TextView -->
+        <TextView
+            android:id="@+id/textView"
+            android:layout_width="wrap_content"
+            android:layout_height="48dp"
+            android:background="@drawable/text_totalprice_bg"
+            android:elevation="@dimen/_10sdp"
+            android:gravity="center"
+            android:text="₺1.500,00"
+            android:paddingHorizontal="@dimen/_5sdp"
+            android:textColor="@color/primary_color"
+            android:textSize="20sp"
+            android:textStyle="bold" />
+
+    </LinearLayout>
+
+</androidx.constraintlayout.widget.ConstraintLayout>

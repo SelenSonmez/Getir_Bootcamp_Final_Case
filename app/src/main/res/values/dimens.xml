@@ -1,0 +1,12 @@
+<resources>
+    <dimen name="margin_horizontal">12dp</dimen>
+    <dimen name="margin_top">15dp</dimen>
+    <dimen name="margin_top_small">20dp</dimen>
+    <dimen name="margin_bottom_small">20dp</dimen>
+    <dimen name="icon_button_size">40dp</dimen>
+    <dimen name="icon_button_padding">20dp</dimen>
+    <dimen name="quantity_text_size">40dp</dimen>
+    <dimen name="quantity_text_font_size">20sp</dimen>
+    <dimen name="product_image_size">100dp</dimen>
+    <dimen name="elevation">5dp</dimen>
+</resources>

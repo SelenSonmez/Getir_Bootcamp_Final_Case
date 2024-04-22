@@ -3,5 +3,8 @@
     <string name="title_products">Ürünler</string>
     <string name="title_product_details">Ürün Detayı</string>
     <string name="product_image">Product Image</string>
+    <string name="delete_order_button">Delete Order Button</string>
+    <string name="delete_order_button_description">Delete Order Button</string>
+    <string name="sipari_i_tamamla">Siparişi Tamamla</string>
 
 </resources>
