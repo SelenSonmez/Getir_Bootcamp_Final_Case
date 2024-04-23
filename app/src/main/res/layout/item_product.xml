@@ -1,16 +1,16 @@
 <?xml version="1.0" encoding="utf-8"?>
 <androidx.constraintlayout.widget.ConstraintLayout
+    android:id="@+id/card"
     android:layout_height="wrap_content"
     android:layout_width="wrap_content"
     xmlns:android="http://schemas.android.com/apk/res/android"
-    android:id="@+id/card"
-    android:layout_marginStart="7dp"
+    android:paddingEnd="@dimen/_10sdp"
     xmlns:app="http://schemas.android.com/apk/res-auto">
 
     <RelativeLayout
         android:id="@+id/relativeLayout"
-        android:layout_width="92dp"
-        android:layout_height="92dp"
+        android:layout_width="110dp"
+        android:layout_height="110dp"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent">
 
@@ -54,11 +54,11 @@
             android:gravity="center"
             />
 
-        <androidx.appcompat.widget.AppCompatButton
+        <ImageButton
             android:id="@+id/deleteBtn"
-            android:visibility="gone"
             android:layout_width="25dp"
             android:layout_height="25dp"
+            android:visibility="gone"
             android:layout_gravity="center"
             android:layout_marginEnd="1dp"
             android:layout_alignParentEnd="true"
@@ -67,7 +67,8 @@
             android:textColor="@color/purple_700"
             android:drawableStart="@drawable/ic_delete"
             android:drawablePadding="5dp"
-            android:textSize="20sp" />
+            android:textSize="20sp"
+            />
 
     </RelativeLayout>
 
