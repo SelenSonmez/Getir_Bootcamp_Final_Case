@@ -1,38 +1,31 @@
-package com.getir.finalcase.presentation.product_list
+package com.getir.finalcase.presentation.cart
 
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
-import com.getir.finalcase.data.local.database.entity.ProductEntity
+import com.getir.finalcase.databinding.ItemCartProductTileBinding
 import com.getir.finalcase.databinding.ItemProductBinding
 import com.getir.finalcase.domain.model.Product
-import com.getir.finalcase.domain.model.ProductCategory
 
-class ProductListAdapter(
+class CartItemAdapter(
     private var dataSet: List<Product>,
-    private val onItemClick: (Product) -> Unit,
     private val onAddButtonClick: (Product) -> Unit
 ) :
-    RecyclerView.Adapter<ProductListAdapter.ViewHolder>() {
+    RecyclerView.Adapter<CartItemAdapter.ViewHolder>() {
 
     // ViewHolder class holds references to views within each item of the RecyclerView
-    class ViewHolder(private val binding: ItemProductBinding) :
+    class ViewHolder(private val binding: ItemCartProductTileBinding) :
         RecyclerView.ViewHolder(binding.root) {
 
         // Bind method to populate views with data
-        fun bind(product: Product,onItemClick: (Product) -> Unit, onAddButtonClick: (Product) ->Unit) {
+        fun bind(product: Product, onAddButtonClick: (Product) ->Unit) {
             // Use data binding to set data to views
             binding.apply {
-                Log.v("amountselen",product.amount.toString())
-                if(product.amount > 0 ){
-                    enableAmountMenu(binding)
-                }
                 textViewAttribute.text = product.attribute
                 textViewPrice.text = product.priceText.toString()
-                textCount.text = product.amount.toString()
+
                 // If the product name exceeds length 30
                 val maxProductNameLength = 15
                 val displayName = if (product.name!!.length > maxProductNameLength) {
@@ -40,7 +33,7 @@ class ProductListAdapter(
                 } else {
                     product.name // Keep the original name
                 }
-                textViewName.text = displayName
+                textViewProductName.text = displayName
 
                 // Load image using Glide library
                 if(product.imageURL != null ){
@@ -54,21 +47,10 @@ class ProductListAdapter(
                 }
 
 
-                addBtn.setOnClickListener {
+                addButton.setOnClickListener {
                     // Call the onAddButtonClick callback when the add button is clicked
                     onAddButtonClick(product)
-                    enableAmountMenu(binding)
-
                 }
-
-                root.setOnClickListener { onItemClick(product) }
-            }
-        }
-        private fun enableAmountMenu(binding: ItemProductBinding) {
-            binding.apply {
-                addBtn.visibility = VISIBLE
-                textCount.visibility = VISIBLE
-                deleteBtn.visibility = VISIBLE
             }
         }
     }
@@ -77,16 +59,14 @@ class ProductListAdapter(
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ViewHolder {
         // Inflate layout using data binding
         val inflater = LayoutInflater.from(parent.context)
-        val binding = ItemProductBinding.inflate(inflater, parent, false)
-
-
+        val binding = ItemCartProductTileBinding.inflate(inflater, parent, false)
         return ViewHolder(binding)
     }
 
     // Bind data to views in each item
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val product = dataSet[position]
-        holder.bind(product,onItemClick,onAddButtonClick)
+        holder.bind(product,onAddButtonClick)
     }
 
     // Update dataset with new list of products

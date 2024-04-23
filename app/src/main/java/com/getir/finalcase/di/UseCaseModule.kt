@@ -2,6 +2,7 @@ package com.getir.finalcase.di
 
 import com.getir.finalcase.domain.repository.ProductListRepository
 import com.getir.finalcase.domain.usecase.ProductListUseCase
+import com.getir.finalcase.domain.usecase.SuggestedProductUseCase
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -14,6 +15,11 @@ class UseCaseModule {
 
     @Provides
     @Singleton
-    fun provideProductListUseCase(foodRepository: ProductListRepository) =
-        ProductListUseCase(foodRepository)
+    fun provideProductListUseCase(productListRepository: ProductListRepository) =
+        ProductListUseCase(productListRepository)
+
+    @Provides
+    @Singleton
+    fun provideSuggestedProductUseCase(suggestedProductListRepository: ProductListRepository) =
+        SuggestedProductUseCase(suggestedProductListRepository)
 }

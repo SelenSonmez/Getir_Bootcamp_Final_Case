@@ -9,7 +9,6 @@ import retrofit2.Response
 
 class CallBack<T>(private val responseChannel: SendChannel<BaseResponse<T>>): Callback<T> {
 
-
     override fun onResponse(call: Call<T>, response: Response<T>) {
         if(response.isSuccessful){
             val body = response.body()

@@ -8,9 +8,9 @@ import com.getir.finalcase.domain.repository.ProductListRepository
 import kotlinx.coroutines.flow.Flow
 import javax.inject.Inject
 
-class ProductListUseCase @Inject constructor(
+class SuggestedProductUseCase @Inject constructor(
     private val productListRepository: ProductListRepository,
 ): NoParaMeterUseCase<Flow<BaseResponse<List<ProductCategory>>>>{
-    override fun execute(): Flow<BaseResponse<List<ProductCategory>>> = productListRepository.getAllProducts()
+    override fun execute(): Flow<BaseResponse<List<ProductCategory>>>  = productListRepository.getAllHorizontalProducts()
 
 }

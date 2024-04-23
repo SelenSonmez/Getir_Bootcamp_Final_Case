@@ -8,4 +8,7 @@ import retrofit2.http.GET
 interface ApiService {
     @GET("products")
      fun getProductList(): Call<List<ProductCategory>>
+    @GET("suggestedProducts")
+    fun getHorizontalProductList(): Call<List<ProductCategory>>
+
 }

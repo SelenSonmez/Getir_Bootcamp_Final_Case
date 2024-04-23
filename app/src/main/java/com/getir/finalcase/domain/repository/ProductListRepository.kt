@@ -25,5 +25,13 @@ class ProductListRepository @Inject constructor(
         awaitClose { close() }
     }.flowOn(ioDispatcher)
 
+    fun getAllHorizontalProducts(): Flow<BaseResponse<List<ProductCategory>>> = callbackFlow<BaseResponse<List<ProductCategory>>> {
+        apiService.getHorizontalProductList().enqueue(CallBack(this.channel))
+        awaitClose { close() }
+    }.flowOn(ioDispatcher)
+
+
+
+
 }
 

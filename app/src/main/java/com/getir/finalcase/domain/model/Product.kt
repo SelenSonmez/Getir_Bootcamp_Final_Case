@@ -8,13 +8,15 @@ import com.getir.finalcase.data.local.database.entity.ProductEntity
 import java.io.Serializable
 
 data class Product(
-    @SerializedName("id") val id: String,
-    @SerializedName("name") val name: String? = null,
-    @SerializedName("attribute") val attribute: String? = null,
-    @SerializedName("thumbnailURL") val thumbnailURL: String? = null,
-    @SerializedName("imageURL") val imageURL: String? = null,
-    @SerializedName("price") val price: Double? = 0.0,
-    @SerializedName("priceText") val priceText: String? = null
+    val id: String,
+    val name: String? = null,
+    val attribute: String? = null,
+    val thumbnailURL: String? = null,
+    val squareThumbnailURL: String? = null,
+    val imageURL: String? = null,
+    val price: Double? = 0.0,
+    val priceText: String? = null,
+    var amount: Int = 0
 ) : Serializable
 
 fun Product.toProductEntity() = ProductEntity(
@@ -22,22 +24,17 @@ fun Product.toProductEntity() = ProductEntity(
     name = this.name,
     attribute = this.attribute,
     thumbnailURL = this.thumbnailURL,
+    squareThumbnailURL = this.squareThumbnailURL,
     imageURL = this.imageURL,
     price = this.price,
-    priceText = this.priceText
+    priceText = this.priceText,
+    amount = this.amount
 
 )
 
-data class ProductCategory (
-    @SerializedName("id")
-     val id: String? = null,
-
-    @SerializedName("name")
-     val name: String? = null,
-
-    @SerializedName("productCount")
-     val productCount: Int = 0,
-
-    @SerializedName("products")
-     val products: List<Product>? = null
-): Serializable
+data class ProductCategory(
+    var id: String?,
+    var name: String? = null,
+    val productCount: Int? = 0,
+    val products: List<Product>? = null
+) : Serializable

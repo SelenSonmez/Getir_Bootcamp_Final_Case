@@ -1,3 +1,4 @@
+/*
 package com.getir.finalcase.domain.model
 
 import com.getir.finalcase.data.local.database.entity.BasketProductEntity
@@ -11,4 +12,4 @@ fun BasketProduct.toBasketProductEntity() =
     BasketProductEntity(
         productId = this.product.id,
         count = this.count
-    )
+    )*/
