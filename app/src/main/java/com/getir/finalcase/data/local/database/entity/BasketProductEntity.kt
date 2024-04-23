@@ -1,3 +1,4 @@
+/*
 package com.getir.finalcase.data.local.database.entity
 
 import androidx.room.Entity
@@ -19,4 +20,4 @@ data class BasketProductEntity(
     @PrimaryKey(autoGenerate = true) val id: Int = 0,
     val productId: String,
     val count: Int
-)
+)*/

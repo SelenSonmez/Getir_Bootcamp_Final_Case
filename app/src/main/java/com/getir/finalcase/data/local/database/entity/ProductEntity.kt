@@ -10,9 +10,11 @@ data class ProductEntity(
     val name: String?,
     val attribute: String?,
     val thumbnailURL: String?,
+    val squareThumbnailURL: String?,
     val imageURL: String?,
     val price: Double?,
-    val priceText: String?
+    val priceText: String?,
+    val amount: Int = 0
 )
 
 fun ProductEntity.toProduct(): Product =
@@ -21,7 +23,9 @@ fun ProductEntity.toProduct(): Product =
         name = this.name,
         attribute = this.attribute,
         thumbnailURL = this.thumbnailURL,
+        squareThumbnailURL = this.squareThumbnailURL,
         imageURL = this.imageURL,
         price = this.price,
-        priceText = this.priceText
+        priceText = this.priceText,
+        amount = this.amount
     )
