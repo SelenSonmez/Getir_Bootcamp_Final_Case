@@ -7,9 +7,6 @@
     <include
         android:id="@+id/toolbar"
         layout="@layout/toolbar_layout"
-        android:layout_width="0dp"
-        android:layout_height="0dp"
-        android:layout_marginBottom="621dp"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -20,10 +17,8 @@
         android:id="@+id/productsRecyclerView"
         android:layout_width="0dp"
         android:layout_height="0dp"
-        android:layout_margin="@dimen/_12sdp"
-        android:layout_marginStart="15dp"
-        android:layout_marginEnd="15dp"
-        app:layout_constraintBottom_toTopOf="@id/linearLayout"
+        android:layout_margin="@dimen/_10sdp"
+        app:layout_constraintBottom_toTopOf="@id/gradientSpace"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/toolbar" />
@@ -32,9 +27,11 @@
     <View
         android:id="@+id/gradientSpace"
         android:layout_width="0dp"
-        android:layout_height="50dp"
+        android:layout_height="5dp"
         android:layout_marginBottom="@dimen/_15sdp"
         android:background="@drawable/divider_shadow"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/linearLayout"
         />
 
@@ -48,9 +45,8 @@
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/toolbar"
         android:layout_marginHorizontal="@dimen/_50sdp"
-        android:layout_marginBottom="@dimen/_15sdp"
+        android:layout_marginBottom="@dimen/_20sdp"
         >
 
         <!-- Complete Order Button -->
@@ -61,7 +57,7 @@
             android:background="@drawable/button_finish_order"
             android:padding="@dimen/_10sdp"
             android:textStyle="bold"
-            android:text="@string/sipari_i_tamamla"
+            android:text="@string/complete_order"
             android:textSize="12sp"
             android:textColor="@color/white" />
 
