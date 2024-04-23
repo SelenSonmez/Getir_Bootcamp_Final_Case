@@ -5,6 +5,8 @@
     <string name="product_image">Product Image</string>
     <string name="delete_order_button">Delete Order Button</string>
     <string name="delete_order_button_description">Delete Order Button</string>
-    <string name="sipari_i_tamamla">Siparişi Tamamla</string>
+    <string name="complete_order">Siparişi Tamamla</string>
+    <string name="basket">Sepetim</string>
+
 
 </resources>

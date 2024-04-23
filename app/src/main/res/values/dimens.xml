@@ -8,5 +8,5 @@
     <dimen name="quantity_text_size">40dp</dimen>
     <dimen name="quantity_text_font_size">20sp</dimen>
     <dimen name="product_image_size">100dp</dimen>
-    <dimen name="elevation">5dp</dimen>
+    <dimen name="elevation">2dp</dimen>
 </resources>
