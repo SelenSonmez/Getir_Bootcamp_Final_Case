@@ -120,25 +120,4 @@ class SharedProductViewModel @Inject constructor(
          }
 
     }
-
-   /* fun getAllBasketProducts() {
-        viewModelScope.launch {
-            try {
-                uiStateBasketProducts.value = ViewState.Loading
-                basketProductRepository.getAllBasketProducts().collect { baseResponse ->
-                    when (baseResponse) {
-                        is BaseResponse.Success -> {
-                            uiStateBasketProducts.value = ViewState.Success(baseResponse.data)
-                        }
-                        is BaseResponse.Error -> {
-                            uiStateBasketProducts.value = ViewState.Error(baseResponse.message ?: "Unknown error occurred")
-                        }
-                    }
-                }
-            } catch (e: Exception) {
-                uiStateBasketProducts.value = ViewState.Error(e.message ?: "Unknown error occurred")
-            }
-        }
-    }*/
-
 }

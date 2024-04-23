@@ -25,6 +25,7 @@ class CartItemAdapter(
             binding.apply {
                 textViewAttribute.text = product.attribute
                 textViewPrice.text = product.priceText.toString()
+                quantityText.text = product.amount.toString()
 
                 // If the product name exceeds length 30
                 val maxProductNameLength = 15

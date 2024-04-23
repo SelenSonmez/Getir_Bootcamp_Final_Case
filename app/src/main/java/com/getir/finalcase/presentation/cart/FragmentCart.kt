@@ -71,8 +71,11 @@ class FragmentCart : Fragment() {
 
         }
         viewModel.uiStateProductInBasket.observe(viewLifecycleOwner, Observer { state ->
-            Log.v("deneme", state.size.toString())
+                adapter.updateProducts(state)
         })
+
+        // Observe the UI state of products
+
     }
   /*  private fun observeCart() {
         viewLifecycleOwner.lifecycleScope.launch {
