@@ -2,6 +2,7 @@ package com.getir.finalcase.presentation.product_list
 
 import android.util.Log
 import android.view.LayoutInflater
+import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -14,7 +15,8 @@ import com.getir.finalcase.domain.model.ProductCategory
 class ProductListAdapter(
     private var dataSet: List<Product>,
     private val onItemClick: (Product) -> Unit,
-    private val onAddButtonClick: (Product) -> Unit
+    private val onAddButtonClick: (Product) -> Unit,
+    private val onDeleteButtonClick: (Product) -> Unit
 ) :
     RecyclerView.Adapter<ProductListAdapter.ViewHolder>() {
 
@@ -23,16 +25,19 @@ class ProductListAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         // Bind method to populate views with data
-        fun bind(product: Product,onItemClick: (Product) -> Unit, onAddButtonClick: (Product) ->Unit) {
+        fun bind(product: Product,onItemClick: (Product) -> Unit, onAddButtonClick: (Product) ->Unit, onDeleteButtonClick: (Product) -> Unit) {
             // Use data binding to set data to views
             binding.apply {
-                Log.v("amountselen",product.amount.toString())
-                if(product.amount > 0 ){
+                if(product.amount > 0){
                     enableAmountMenu(binding)
+                }else{
+                    disableAmountMenu(binding)
                 }
+
                 textViewAttribute.text = product.attribute
                 textViewPrice.text = product.priceText.toString()
                 textCount.text = product.amount.toString()
+                Log.v("selennn",product.amount.toString())
                 // If the product name exceeds length 30
                 val maxProductNameLength = 15
                 val displayName = if (product.name!!.length > maxProductNameLength) {
@@ -61,6 +66,10 @@ class ProductListAdapter(
 
                 }
 
+                deleteBtn.setOnClickListener {
+                    onDeleteButtonClick(product)
+                }
+
                 root.setOnClickListener { onItemClick(product) }
             }
         }
@@ -69,6 +78,13 @@ class ProductListAdapter(
                 addBtn.visibility = VISIBLE
                 textCount.visibility = VISIBLE
                 deleteBtn.visibility = VISIBLE
+            }
+        }
+
+        private fun disableAmountMenu(binding: ItemProductBinding) {
+            binding.apply {
+                textCount.visibility = GONE
+                deleteBtn.visibility = GONE
             }
         }
     }
@@ -86,7 +102,7 @@ class ProductListAdapter(
     // Bind data to views in each item
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val product = dataSet[position]
-        holder.bind(product,onItemClick,onAddButtonClick)
+        holder.bind(product,onItemClick,onAddButtonClick,onDeleteButtonClick)
     }
 
     // Update dataset with new list of products

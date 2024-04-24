@@ -20,6 +20,7 @@ import kotlinx.coroutines.flow.map
 import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
+import java.text.DecimalFormat
 import javax.inject.Inject
 
 @HiltViewModel
@@ -34,6 +35,8 @@ class SharedProductViewModel @Inject constructor(
     val uiStateSuggestedProducts = MutableLiveData<ViewState<List<ProductCategory>>>()
 
     val uiStateProductInBasket = MutableLiveData<List<Product>>()
+
+    val uiStateProductBasketTotal = MutableLiveData<String>()
 
      fun getAllProducts() {
          viewModelScope.launch {
@@ -57,27 +60,24 @@ class SharedProductViewModel @Inject constructor(
                  }
                  .collect {
                      loadSaveData()
-
+                     calculateAmount()
                  }
-
          }
     }
 
     suspend fun loadSaveData() {
         // Eğer bir product savede varsa amountunu savedeki olanla eşitle
         val currentProducts =  mutableListOf<Product>()
-
         uiStateProducts.value.let { viewState ->
             // Check if the viewState is a Success
             if (viewState is ViewState.Success) {
                 // Access the product list
                 viewState.result.firstOrNull()?.products?.forEach { product ->
                     // Call the repository to get product details by ID
-                        val response = basketProductRepository.getBasketProductById(product.id)
+                    val response = basketProductRepository.getBasketProductById(product.id)
                     if(response is BaseResponse.Success) {
                         if(response.data != null ) {
                             product.amount = response.data.amount
-
                         }
                         currentProducts.add(product)
                     }
@@ -85,6 +85,7 @@ class SharedProductViewModel @Inject constructor(
             }
         }
         uiStateProductInBasket.value = currentProducts
+        uiStateProductInBasket.notifyObserver()
         uiStateProducts.notifyObserver()
     }
 
@@ -110,14 +111,73 @@ class SharedProductViewModel @Inject constructor(
     }
 
      fun addProductToBasketIfFound(product: Product) {
-         viewModelScope.launch {
-             val response = basketProductRepository.addProductToBasket(product)
-             if(response is BaseResponse.Success) {
-                 product.amount += 1
-                 uiStateProducts.notifyObserver()
-                 ViewState.Success("Product added to basket successfully")
+         val currentProducts =  mutableListOf<Product>()
+
+
+         uiStateProductInBasket.value?.let {
+             for(previousProduct in it){
+                 currentProducts.add(previousProduct)
              }
          }
 
+         viewModelScope.launch {
+             product.amount += 1
+             val responseIfDuplicateProduct = basketProductRepository.getBasketProductById(product.id)
+             if(responseIfDuplicateProduct is BaseResponse.Error){
+                 val response = basketProductRepository.addProductToBasket(product)
+                 if(response is BaseResponse.Success) {
+                     currentProducts.add(product)
+                     uiStateProductInBasket.value = currentProducts
+                     ViewState.Success("Product added to basket successfully")
+                 }
+             }else{
+                basketProductRepository.increaseProductCount(product.id)
+             }
+             uiStateProducts.notifyObserver()
+             uiStateSuggestedProducts.notifyObserver()
+             uiStateProductInBasket.notifyObserver()
+             calculateAmount()
+         }
+    }
+
+    fun removeOrReduceProductFromBasket(product: Product) {
+        val currentProducts =  mutableListOf<Product>()
+
+        uiStateProductInBasket.value?.let {
+            for(previousProduct in it){
+                currentProducts.add(previousProduct)
+            }
+        }
+        viewModelScope.launch {
+            product.amount -= 1
+            val response = basketProductRepository.removeProductFromBasket(product)
+            if(response is BaseResponse.Success) {
+                if(product.amount < 1) {
+                    currentProducts.remove(product)
+                }
+                uiStateProductInBasket.value = currentProducts
+                uiStateProducts.notifyObserver()
+                uiStateSuggestedProducts.notifyObserver()
+                uiStateProductInBasket.notifyObserver()
+                calculateAmount()
+
+                ViewState.Success("Product amount reduced from basket successfully")
+            }
+        }
+    }
+
+    fun calculateAmount() {
+        var count = 0.0
+        uiStateProductInBasket.value.let {
+            it?.forEach { product ->
+                Log.v("welene",product.toString())
+                if(product.price != null) {
+                    Log.v("selendene"," $product ${product.price} * ${product.amount}")
+                    count += product.price * product.amount
+                }
+            }
+
+            uiStateProductBasketTotal.value = String.format("%.2f",count)
+        }
     }
 }

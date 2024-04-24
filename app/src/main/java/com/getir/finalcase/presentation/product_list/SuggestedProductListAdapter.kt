@@ -11,7 +11,9 @@ import com.getir.finalcase.domain.model.Product
 class SuggestedProductListAdapter(
     private var dataSet: List<Product>,
     private val onItemClick: (Product) -> Unit,
-    private val onAddButtonClick: (Product) -> Unit
+    private val onAddButtonClick: (Product) -> Unit,
+    private val onDeleteButtonClick: (Product) -> Unit
+
 ) : RecyclerView.Adapter<ProductListAdapter.ViewHolder>() {
 
     // ViewHolder class holds references to views within each item of the RecyclerView
@@ -72,7 +74,7 @@ class SuggestedProductListAdapter(
 
     override fun onBindViewHolder(holder: ProductListAdapter.ViewHolder, position: Int) {
         val product = dataSet[position]
-        holder.bind(product,onItemClick,onAddButtonClick)
+        holder.bind(product,onItemClick,onAddButtonClick, onDeleteButtonClick)
     }
 
 

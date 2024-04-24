@@ -1,5 +1,7 @@
 package com.getir.finalcase.presentation.cart
 
+import android.content.res.ColorStateList
+import android.content.res.Configuration
 import androidx.fragment.app.Fragment
 import com.getir.finalcase.presentation.product_details.ProductDetailsFragmentDirections
 
@@ -10,6 +12,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.View.VISIBLE
 import android.view.ViewGroup
+import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
@@ -21,7 +24,9 @@ import com.getir.finalcase.R
 import com.getir.finalcase.common.domain.ViewState
 import com.getir.finalcase.databinding.FragmentCartBinding
 import com.getir.finalcase.databinding.FragmentProductListBinding
+import com.getir.finalcase.domain.model.BaseResponse
 import com.getir.finalcase.domain.model.Product
+import com.getir.finalcase.ext.notifyObserver
 import com.getir.finalcase.presentation.SharedProductViewModel
 import com.getir.finalcase.presentation.product_list.ProductListAdapter
 import com.getir.finalcase.presentation.product_list.ProductListViewModel
@@ -37,7 +42,6 @@ class FragmentCart : Fragment() {
     private lateinit var adapter: CartItemAdapter
    // private val viewModel: CartViewModel by viewModels()
     private val viewModel: SharedProductViewModel by activityViewModels()
-
 
 
     override fun onCreateView(
@@ -58,23 +62,29 @@ class FragmentCart : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
-        //fetchBasket()
-        //observeCart()
-        // Populate the UI with the product details
         binding.apply {
             toolbar.toolbarTitle.text = getString(R.string.basket)
             toolbar.backButton.visibility = VISIBLE
+            val color = ContextCompat.getColor(requireContext(),R.color.white)
+            toolbar.deleteIcon.setImageTintList(ColorStateList.valueOf(color))
             toolbar.deleteIcon.visibility = VISIBLE
             /*toolbar.backButton.setOnClickListener {
                 navigateToProductList()
             }*/
-
         }
+
+
         viewModel.uiStateProductInBasket.observe(viewLifecycleOwner, Observer { state ->
-                adapter.updateProducts(state)
+            Log.v("stateselen",state.size.toString())
+            adapter.updateProducts(state)
         })
 
 
+
+    }
+
+    override fun onConfigurationChanged(newConfig: Configuration) {
+        super.onConfigurationChanged(newConfig)
     }
 
   private fun onAddButtonClick(product: Product) {

@@ -33,8 +33,10 @@ class ProductListFragment : Fragment() {
     private lateinit var suggestedProductListAdapter: ProductListAdapter
     private val viewModel: SharedProductViewModel by activityViewModels()
 
-    //private val viewModel: ProductListViewModel by viewModels()
-
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        viewModel.getAllProducts()
+    }
 
     override fun onCreateView(
         inflater: LayoutInflater, container: ViewGroup?,
@@ -47,11 +49,9 @@ class ProductListFragment : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setupToolbar()
-        //observeViewModel()
-        fetchProducts()
-
         fetchSuggestedProducts()
+
+        setupToolbar()
 
         // Observe the UI state of products
         viewModel.uiStateProducts.observe(viewLifecycleOwner, Observer { state ->
@@ -96,6 +96,9 @@ class ProductListFragment : Fragment() {
 
     private fun setupToolbar() {
         binding.toolbar.toolbarTitle.text = getString(R.string.title_products)
+        viewModel.uiStateProductBasketTotal.observe(viewLifecycleOwner, Observer { state ->
+            binding.toolbar.totalAmount.text = state.toString()
+        })
         binding.toolbar.containerBasket.setOnClickListener {
             val action = ProductListFragmentDirections.actionProductListFragmentToCartFragment()
             findNavController().navigate(action)
@@ -103,71 +106,13 @@ class ProductListFragment : Fragment() {
     }
 
     private fun setupRecyclerViews() {
-        adapter = ProductListAdapter(emptyList(), ::onItemClicked, ::onAddButtonClick)
+        adapter = ProductListAdapter(emptyList(), ::onItemClicked, ::onAddButtonClick, :: onDeleteButtonClick)
         binding.productsRecyclerView.layoutManager = GridLayoutManager(requireContext(), 3)
         binding.productsRecyclerView.adapter = adapter
 
-        suggestedProductListAdapter = ProductListAdapter(emptyList(), ::onItemClicked, ::onAddButtonClick)
+        suggestedProductListAdapter = ProductListAdapter(emptyList(), ::onItemClicked, ::onAddButtonClick, ::onDeleteButtonClick)
         binding.productHorizontalRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.productHorizontalRecyclerView.adapter = suggestedProductListAdapter
-    }
-
-    /*private fun observeViewModel() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.uiStateProduct.collect { state ->
-                when (state) {
-                    is ViewState.Loading -> binding.loadingProgressBar.visibility = View.VISIBLE
-                    is ViewState.Success -> {
-                        binding.loadingProgressBar.visibility = View.GONE
-                        state.result.firstOrNull()?.products?.let { adapter.updateProducts(it) }
-                    }
-                    is ViewState.Error -> {
-                        binding.loadingProgressBar.visibility = View.GONE
-                        Snackbar.make(requireView(), "Error: ${state.error}", Snackbar.LENGTH_LONG).show()
-                    }
-                }
-            }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.uiStateSuggestedProduct.collect { state ->
-                when (state) {
-                    is ViewState.Loading -> binding.loadingProgressBar.visibility = View.VISIBLE
-                    is ViewState.Success -> {
-                        binding.loadingProgressBar.visibility = View.GONE
-                        state.result.firstOrNull()?.products?.let { suggestedProductListAdapter.updateProducts(it) }
-                    }
-                    is ViewState.Error -> {
-                        binding.loadingProgressBar.visibility = View.GONE
-                        Snackbar.make(requireView(), "Error: ${state.error}", Snackbar.LENGTH_LONG).show()
-                    }
-                }
-            }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.uiStateBasketAddition.collect { state ->
-                when (state) {
-                    is ViewState.Loading -> binding.loadingProgressBar.visibility = View.VISIBLE
-                    is ViewState.Success -> {
-                        binding.loadingProgressBar.visibility = View.GONE
-                        Snackbar.make(requireView(), state.result, Snackbar.LENGTH_SHORT).show()
-                    }
-                    is ViewState.Error -> Snackbar.make(requireView(), "Error: ${state.error}", Snackbar.LENGTH_SHORT).show()
-                }
-            }
-        }
-
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.menuVisibility.collectLatest {
-
-            }
-        }
-
-    }*/
-
-    private fun fetchProducts() {
-        viewModel.getAllProducts()
     }
 
     private fun fetchSuggestedProducts() {
@@ -181,5 +126,9 @@ class ProductListFragment : Fragment() {
 
      private fun onAddButtonClick(product: Product) {
         viewModel.addProductToBasketIfFound(product)
+    }
+
+    private fun onDeleteButtonClick(product: Product) {
+        viewModel.removeOrReduceProductFromBasket(product)
     }
 }
