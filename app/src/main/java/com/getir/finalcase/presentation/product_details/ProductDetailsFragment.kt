@@ -97,7 +97,7 @@ class ProductDetailsFragment : Fragment() {
         // Release the binding to avoid memory leaks
         binding = null
     }
-    fun showAddBasketButton(binding: FragmentProductDetailsBinding, product: Product) {
+    private fun showAddBasketButton(binding: FragmentProductDetailsBinding, product: Product) {
         val itemCount = product.amount
         binding.apply {
             if(itemCount > 0) {

@@ -1,48 +1,29 @@
 package com.getir.finalcase.presentation.cart
 
-import android.app.AlertDialog
 import android.app.Dialog
 import android.content.res.ColorStateList
-import android.content.res.Configuration
 import android.graphics.Color
 import android.graphics.drawable.ColorDrawable
 import androidx.fragment.app.Fragment
-import com.getir.finalcase.presentation.product_details.ProductDetailsFragmentDirections
-
-
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import android.view.Window
 import android.widget.Button
-import android.widget.Toast
+import android.widget.TextView
 import androidx.core.content.ContextCompat
 import androidx.fragment.app.activityViewModels
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
-import androidx.lifecycle.lifecycleScope
 import androidx.navigation.fragment.findNavController
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.getir.finalcase.R
-import com.getir.finalcase.common.domain.ViewState
 import com.getir.finalcase.databinding.CustomAlertDialogBinding
 import com.getir.finalcase.databinding.FragmentCartBinding
-import com.getir.finalcase.databinding.FragmentProductListBinding
-import com.getir.finalcase.databinding.ItemCartProductTileBinding
-import com.getir.finalcase.domain.model.BaseResponse
 import com.getir.finalcase.domain.model.Product
-import com.getir.finalcase.ext.notifyObserver
 import com.getir.finalcase.presentation.SharedProductViewModel
-import com.getir.finalcase.presentation.product_list.ProductListAdapter
-import com.getir.finalcase.presentation.product_list.ProductListFragmentDirections
-import com.getir.finalcase.presentation.product_list.ProductListViewModel
-import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.coroutines.launch
 
 @AndroidEntryPoint
 class FragmentCart : Fragment() {
@@ -70,7 +51,7 @@ class FragmentCart : Fragment() {
         return binding.root
     }
 
-   private fun navigateToProductList() {
+    private fun navigateToProductList() {
        val navController = findNavController()
        navController.navigate(FragmentCartDirections.actionCartFragmentToProductListFragment())
     }
@@ -89,11 +70,12 @@ class FragmentCart : Fragment() {
                 navigateToProductList()
             }
             viewModel.uiStateProductBasketTotal.observe(viewLifecycleOwner, Observer {totalAmount ->
-                totalCartAmount.text = totalAmount
+                totalCartAmount.text = "₺ $totalAmount"
             })
 
             btnCompleteOrder.setOnClickListener {
-                showCustomDialogBox(dialogBinding)
+                val totalAmount = viewModel.uiStateProductBasketTotal.value ?: "0.00"
+                showCustomDialogBox("$totalAmount ₺ değerindeki Siparişiniz alındı. Teşekkürler \uD83D\uDE4F")
             }
         }
 
@@ -103,16 +85,21 @@ class FragmentCart : Fragment() {
 
     }
 
-    private fun showCustomDialogBox(dialogBinding: CustomAlertDialogBinding) {
+    private fun showCustomDialogBox(totalAmount: String) {
         val dialog = Dialog(requireContext())
         dialog.requestWindowFeature(Window.FEATURE_NO_TITLE)
         dialog.setCancelable(true)
         dialog.setContentView(R.layout.custom_alert_dialog)
         dialog.window?.setBackgroundDrawable(ColorDrawable(Color.TRANSPARENT))
 
+        // Access the TextView in the custom layout and set the total amount
+        val totalAmountTextView = dialog.findViewById<TextView>(R.id.message)
+        totalAmountTextView.text = totalAmount
+
         dialog.findViewById<Button>(R.id.finishOrderBtn)?.setOnClickListener {
             viewModel.removeAllProductsFromCart()
             dialog.dismiss()
+            navigateToProductList()
         }
         dialog.show()
     }

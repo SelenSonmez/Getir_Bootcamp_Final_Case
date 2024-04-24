@@ -26,9 +26,7 @@ class ProductListAdapter(
 
         // Bind method to populate views with data
         fun bind(product: Product,onItemClick: (Product) -> Unit, onAddButtonClick: (Product) ->Unit, onDeleteButtonClick: (Product) -> Unit) {
-            // Use data binding to set data to views
             binding.apply {
-                Log.v("selenO","${product.name} ${product.amount}")
                 if(product.amount > 0){
                     enableAmountMenu(binding)
                 }else{

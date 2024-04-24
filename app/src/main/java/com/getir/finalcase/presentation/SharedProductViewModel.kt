@@ -35,13 +35,14 @@ class SharedProductViewModel @Inject constructor(
 
     val uiStateProductBasketTotal = MutableLiveData<String>()
 
+    private var isDataFetched: Boolean = false
+
      fun getAllProducts() {
          viewModelScope.launch {
              productListUseCase.execute()
                  .map { baseResponse ->
                      when (baseResponse) {
                          is BaseResponse.Success -> {
-                             Log.v("base",baseResponse.data.toString())
                              ViewState.Success(baseResponse.data)
                          }
                          is BaseResponse.Error -> ViewState.Error(baseResponse.message)
@@ -197,5 +198,13 @@ class SharedProductViewModel @Inject constructor(
             }
             uiStateProductBasketTotal.value = String.format("%.2f",count)
         }
+    }
+
+    fun fragmentCreated() {
+        if(!isDataFetched) {
+            getAllProducts()
+            getSuggestedProducts()
+        }
+        isDataFetched  = true
     }
 }
