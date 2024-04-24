@@ -7,6 +7,8 @@
     <string name="delete_order_button_description">Delete Order Button</string>
     <string name="complete_order">Siparişi Tamamla</string>
     <string name="basket">Sepetim</string>
+    <string name="add_to_cart">sepete ekle</string>
+    <string name="delete_icon_description">delete icon</string>
 
 
 </resources>

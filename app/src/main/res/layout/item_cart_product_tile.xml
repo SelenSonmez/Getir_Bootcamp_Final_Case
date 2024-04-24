@@ -55,11 +55,25 @@
         android:id="@+id/deleteButton"
         android:layout_width="@dimen/icon_button_size"
         android:layout_height="@dimen/icon_button_size"
+        android:visibility="gone"
         android:background="@drawable/button_cart_delete_bg"
         android:contentDescription="@string/delete_order_button_description"
         android:elevation="@dimen/elevation"
         android:padding="@dimen/icon_button_padding"
         android:src="@drawable/ic_delete"
+        app:layout_constraintEnd_toStartOf="@+id/quantityText"
+        app:layout_constraintTop_toTopOf="@+id/addButton" />
+
+    <ImageButton
+        android:id="@+id/minusButton"
+        android:layout_width="@dimen/icon_button_size"
+        android:layout_height="@dimen/icon_button_size"
+        android:visibility="gone"
+        android:background="@drawable/button_cart_delete_bg"
+        android:contentDescription="@string/delete_order_button_description"
+        android:elevation="@dimen/elevation"
+        android:padding="@dimen/icon_button_padding"
+        android:src="@drawable/ic_minus"
         app:layout_constraintEnd_toStartOf="@+id/quantityText"
         app:layout_constraintTop_toTopOf="@+id/addButton" />
 
