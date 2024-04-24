@@ -64,7 +64,7 @@ class FragmentCart : Fragment() {
         binding.apply {
             toolbar.toolbarTitle.text = getString(R.string.basket)
             toolbar.backButton.visibility = VISIBLE
-
+            toolbar.deleteIcon.visibility = VISIBLE
             /*toolbar.backButton.setOnClickListener {
                 navigateToProductList()
             }*/
@@ -74,36 +74,9 @@ class FragmentCart : Fragment() {
                 adapter.updateProducts(state)
         })
 
-        // Observe the UI state of products
 
     }
-  /*  private fun observeCart() {
-        viewLifecycleOwner.lifecycleScope.launch {
-            viewModel.uiStateBasketProducts.collect { state ->
-                when (state) {
-                    is ViewState.Loading -> {
-                    }
-                    is ViewState.Success -> {
-                        val basketProducts = state.result
-                        basketProducts.let { adapter.updateProducts(it) }
-                    }
-                    is ViewState.Error -> {
-                        // Show error message to user
-                        Snackbar.make(
-                            requireView(),
-                            "Error: ${state.error}",
-                            Snackbar.LENGTH_LONG
-                        ).show()
-                    }
-                }
-            }
-        }
-    }
 
-
-    private fun fetchBasket() {
-        viewModel.getAllBasketProducts()
-    }*/
   private fun onAddButtonClick(product: Product) {
       //viewModel.getAllBasketProducts()
   }

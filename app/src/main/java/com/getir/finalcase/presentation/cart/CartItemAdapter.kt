@@ -1,6 +1,7 @@
 package com.getir.finalcase.presentation.cart
 
 import android.view.LayoutInflater
+import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
@@ -26,6 +27,14 @@ class CartItemAdapter(
                 textViewAttribute.text = product.attribute
                 textViewPrice.text = product.priceText.toString()
                 quantityText.text = product.amount.toString()
+
+                if(product.amount > 1){
+                    minusButton.visibility = VISIBLE
+                    deleteButton.visibility = GONE
+                }else{
+                    minusButton.visibility = GONE
+                    deleteButton.visibility = VISIBLE
+                }
 
                 // If the product name exceeds length 30
                 val maxProductNameLength = 15
