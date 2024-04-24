@@ -58,17 +58,16 @@
             android:id="@+id/deleteBtn"
             android:layout_width="25dp"
             android:layout_height="25dp"
-            android:visibility="gone"
-            android:layout_gravity="center"
+            android:visibility="visible"
             android:layout_marginEnd="1dp"
             android:layout_alignParentEnd="true"
             android:background="@drawable/delete_bg"
             android:layout_below="@+id/textCount"
             android:textColor="@color/purple_700"
-            android:drawableStart="@drawable/ic_delete"
-            android:drawablePadding="5dp"
-            android:textSize="20sp"
-            />
+            android:src="@drawable/ic_delete"
+            android:padding="6dp"
+            android:scaleType="fitCenter"
+        />
 
     </RelativeLayout>
 
