@@ -6,13 +6,16 @@ import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.bumptech.glide.Glide
+import com.getir.finalcase.databinding.FragmentCartBinding
 import com.getir.finalcase.databinding.ItemCartProductTileBinding
 import com.getir.finalcase.databinding.ItemProductBinding
 import com.getir.finalcase.domain.model.Product
 
 class CartItemAdapter(
     private var dataSet: List<Product>,
-    private val onAddButtonClick: (Product) -> Unit
+    private val onAddButtonClick: (Product) -> Unit,
+    private val onMinusButtonClick: (Product) -> Unit
+
 ) :
     RecyclerView.Adapter<CartItemAdapter.ViewHolder>() {
 
@@ -21,19 +24,23 @@ class CartItemAdapter(
         RecyclerView.ViewHolder(binding.root) {
 
         // Bind method to populate views with data
-        fun bind(product: Product, onAddButtonClick: (Product) ->Unit) {
+        fun bind(product: Product, onAddButtonClick: (Product) ->Unit, onMinusButtonClick: (Product) ->Unit) {
             // Use data binding to set data to views
             binding.apply {
                 textViewAttribute.text = product.attribute
                 textViewPrice.text = product.priceText.toString()
                 quantityText.text = product.amount.toString()
 
-                if(product.amount > 1){
+                    if(product.amount > 1){
                     minusButton.visibility = VISIBLE
                     deleteButton.visibility = GONE
                 }else{
                     minusButton.visibility = GONE
                     deleteButton.visibility = VISIBLE
+                }
+
+                deleteButton.setOnClickListener {
+                    onMinusButtonClick(product)
                 }
 
                 // If the product name exceeds length 30
@@ -61,6 +68,11 @@ class CartItemAdapter(
                     // Call the onAddButtonClick callback when the add button is clicked
                     onAddButtonClick(product)
                 }
+
+                minusButton.setOnClickListener {
+                    // Call the onAddButtonClick callback when the minus button is clicked
+                    onMinusButtonClick(product)
+                }
             }
         }
     }
@@ -76,7 +88,7 @@ class CartItemAdapter(
     // Bind data to views in each item
     override fun onBindViewHolder(holder: ViewHolder, position: Int) {
         val product = dataSet[position]
-        holder.bind(product,onAddButtonClick)
+        holder.bind(product,onAddButtonClick,onMinusButtonClick)
     }
 
     // Update dataset with new list of products

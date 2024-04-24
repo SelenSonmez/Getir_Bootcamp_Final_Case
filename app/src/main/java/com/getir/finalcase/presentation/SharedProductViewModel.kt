@@ -13,14 +13,11 @@ import com.getir.finalcase.domain.usecase.ProductListUseCase
 import com.getir.finalcase.domain.usecase.SuggestedProductUseCase
 import com.getir.finalcase.ext.notifyObserver
 import dagger.hilt.android.lifecycle.HiltViewModel
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.flow.catch
 import kotlinx.coroutines.flow.launchIn
 import kotlinx.coroutines.flow.map
-import kotlinx.coroutines.flow.onCompletion
 import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
-import java.text.DecimalFormat
 import javax.inject.Inject
 
 @HiltViewModel
@@ -34,7 +31,7 @@ class SharedProductViewModel @Inject constructor(
 
     val uiStateSuggestedProducts = MutableLiveData<ViewState<List<ProductCategory>>>()
 
-    val uiStateProductInBasket = MutableLiveData<List<Product>>()
+    val uiStateProductInBasket = MutableLiveData<List<Product>>(emptyList())
 
     val uiStateProductBasketTotal = MutableLiveData<String>()
 
@@ -59,16 +56,17 @@ class SharedProductViewModel @Inject constructor(
                          ViewState.Error(error.message ?: "Unknown error occurred")
                  }
                  .collect {
-                     loadSaveData()
+                     loadSaveData(uiStateProducts)
+                     loadSaveData(uiStateSuggestedProducts)
                      calculateAmount()
                  }
          }
     }
 
-    suspend fun loadSaveData() {
+    suspend fun loadSaveData(liveData: MutableLiveData<ViewState<List<ProductCategory>>>) {
         // Eğer bir product savede varsa amountunu savedeki olanla eşitle
         val currentProducts =  mutableListOf<Product>()
-        uiStateProducts.value.let { viewState ->
+        liveData.value.let { viewState ->
             // Check if the viewState is a Success
             if (viewState is ViewState.Success) {
                 // Access the product list
@@ -79,14 +77,14 @@ class SharedProductViewModel @Inject constructor(
                         if(response.data != null ) {
                             product.amount = response.data.amount
                         }
+                        uiStateProductInBasket.value = uiStateProductInBasket.value?.plus(product)
                         currentProducts.add(product)
                     }
                 }
             }
         }
-        uiStateProductInBasket.value = currentProducts
+        liveData.notifyObserver()
         uiStateProductInBasket.notifyObserver()
-        uiStateProducts.notifyObserver()
     }
 
     fun getSuggestedProducts() {
@@ -165,6 +163,27 @@ class SharedProductViewModel @Inject constructor(
             }
         }
     }
+    fun removeAllProductsFromCart() {
+        viewModelScope.launch {
+            val response = basketProductRepository.deleteAllBasketProducts()
+            if(response is BaseResponse.Success) {
+                uiStateProductInBasket.value?.forEach {product ->
+                    run {
+                        product.amount = 0
+                    }
+                }
+                uiStateProductInBasket.value = emptyList()
+                uiStateProductBasketTotal.value = 0.0.toString()
+                uiStateProducts.notifyObserver()
+                uiStateSuggestedProducts.notifyObserver()
+                uiStateProductInBasket.notifyObserver()
+                uiStateProductBasketTotal.notifyObserver()
+                ViewState.Success("Products are removed from the basket")
+            }else{
+                ViewState.Error("Products are couldn't removed from the basket")
+            }
+        }
+    }
 
     fun calculateAmount() {
         var count = 0.0
@@ -176,7 +195,6 @@ class SharedProductViewModel @Inject constructor(
                     count += product.price * product.amount
                 }
             }
-
             uiStateProductBasketTotal.value = String.format("%.2f",count)
         }
     }

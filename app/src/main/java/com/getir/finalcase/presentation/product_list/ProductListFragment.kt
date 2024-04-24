@@ -11,6 +11,7 @@ import androidx.fragment.app.activityViewModels
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -32,10 +33,12 @@ class ProductListFragment : Fragment() {
     private lateinit var adapter: ProductListAdapter
     private lateinit var suggestedProductListAdapter: ProductListAdapter
     private val viewModel: SharedProductViewModel by activityViewModels()
+    lateinit var action: NavDirections
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         viewModel.getAllProducts()
+        viewModel.getSuggestedProducts()
     }
 
     override fun onCreateView(
@@ -48,8 +51,6 @@ class ProductListFragment : Fragment() {
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        fetchSuggestedProducts()
 
         setupToolbar()
 

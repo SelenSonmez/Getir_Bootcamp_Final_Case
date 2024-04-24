@@ -4,21 +4,26 @@ import android.os.Bundle
 import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
+import android.view.View.GONE
 import android.view.View.VISIBLE
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.activityViewModels
+import androidx.navigation.NavDirections
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.fragment.navArgs
 import com.bumptech.glide.Glide
 import com.getir.finalcase.R
 import com.getir.finalcase.databinding.FragmentProductDetailsBinding
 import com.getir.finalcase.domain.model.Product
+import com.getir.finalcase.presentation.SharedProductViewModel
 import com.getir.finalcase.presentation.product_list.ProductListFragmentDirections
 
 
 class ProductDetailsFragment : Fragment() {
 
     private var binding: FragmentProductDetailsBinding? = null
+    private val viewModel: SharedProductViewModel by activityViewModels()
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -46,9 +51,11 @@ class ProductDetailsFragment : Fragment() {
 
         // Populate the UI with the product details
         binding?.apply {
+            showAddBasketButton(this,product)
             textProductName.text = product.name
             textViewPrice.text = product.priceText
             textProductAttribute.text = product.attribute
+            quantityText.text = product.amount.toString()
 
             toolbar.toolbarTitle.text = getString(R.string.title_product_details)
             toolbar.backButton.visibility = VISIBLE
@@ -63,6 +70,25 @@ class ProductDetailsFragment : Fragment() {
                 .placeholder(R.drawable.default_product_image)
                 .into(productImage)
 
+            addButton.setOnClickListener {
+                quantityText.text = (product.amount+1).toString()
+                viewModel.addProductToBasketIfFound(product)
+            }
+
+            addToBasket.setOnClickListener {
+                quantityText.text =  (product.amount +1).toString()
+                viewModel.addProductToBasketIfFound(product)
+                quantityLayout.visibility = VISIBLE
+                addToBasket.visibility = GONE
+            }
+            minusButton.setOnClickListener {
+                quantityText.text = (product.amount-1).toString()
+                viewModel.removeOrReduceProductFromBasket(product)
+                if(product.amount < 1) {
+                    quantityLayout.visibility = GONE
+                    addToBasket.visibility = VISIBLE
+                }
+            }
         }
     }
 
@@ -70,5 +96,18 @@ class ProductDetailsFragment : Fragment() {
         super.onDestroyView()
         // Release the binding to avoid memory leaks
         binding = null
+    }
+    fun showAddBasketButton(binding: FragmentProductDetailsBinding, product: Product) {
+        val itemCount = product.amount
+        binding.apply {
+            if(itemCount > 0) {
+                quantityLayout.visibility = VISIBLE
+                addToBasket.visibility = GONE
+            } else {
+                quantityLayout.visibility = GONE
+                addToBasket.visibility = VISIBLE
+            }
+        }
+
     }
 }
