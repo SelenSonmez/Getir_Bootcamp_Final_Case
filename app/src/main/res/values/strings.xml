@@ -9,6 +9,8 @@
     <string name="basket">Sepetim</string>
     <string name="add_to_cart">sepete ekle</string>
     <string name="delete_icon_description">delete icon</string>
+    <string name="order_completed_text">Siparişiniz alındı, teşekkürler 🙏</string>
+    <string name="ok">Tamam</string>
 
 
 </resources>
