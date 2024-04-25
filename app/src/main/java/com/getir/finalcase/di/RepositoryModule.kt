@@ -18,17 +18,5 @@ class RepositoryModule {
         apiService: ApiService,
         @IoDispatcher ioDispatcher: CoroutineDispatcher
     ) = ProductListRepository(apiService,ioDispatcher)
-  /*  @Provides
-    fun provideFoodRepository(
-        apiService: ApiService,
-        @IoDispatcher ioDispatcher: CoroutineDispatcher
-    ) = FoodRepository(apiService,ioDispatcher)
-
-
-    @Provides
-    fun provideOrderRepository(
-        apiService: ApiService,
-        @IoDispatcher ioDispatcher: CoroutineDispatcher
-    ) = OrderRepository(apiService,ioDispatcher)*/
 
 }

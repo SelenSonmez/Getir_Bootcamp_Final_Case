@@ -11,30 +11,16 @@ import dagger.hilt.InstallIn
 import dagger.hilt.components.SingletonComponent
 import retrofit2.Retrofit
 import javax.inject.Singleton
-
+/**
+ * Dagger module class providing dependencies for the application.
+ */
 @Module
 @InstallIn(SingletonComponent::class)
 object AppModule {
 
     @Provides
-    @Singleton // Optional: Add scoping if needed
+    @Singleton
     fun provideBasketProductDao(database: BasketRoomDatabase): BasketProductDao {
         return database.basketProductDao()
     }
-
-   /*  @Provides
-    @Singleton
-    fun provideMyApi():ApiService {
-        return Retrofit.Builder()
-            .baseUrl("https://65c38b5339055e7482c12050.mockapi.io/api")
-            .build()
-            .create(ApiService::class.java)
-
-    }
-*/
-    /*@Provides
-    @Singleton
-    fun provideMyRepository(api: ApiService, app: HiltApp):ProductListRepository {
-        return ProductListRepository(api, app)
-    }*/
 }

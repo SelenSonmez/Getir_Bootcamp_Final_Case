@@ -1,9 +1,5 @@
 package com.getir.finalcase.domain.model
 
-import com.google.gson.annotations.SerializedName
-
-import android.os.Parcel
-import android.os.Parcelable
 import com.getir.finalcase.data.local.database.entity.ProductEntity
 import java.io.Serializable
 

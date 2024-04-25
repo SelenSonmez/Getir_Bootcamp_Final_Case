@@ -19,10 +19,11 @@ import androidx.lifecycle.Observer
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.getir.finalcase.R
-import com.getir.finalcase.databinding.CustomAlertDialogBinding
+import com.getir.finalcase.common.domain.ViewState
 import com.getir.finalcase.databinding.FragmentCartBinding
 import com.getir.finalcase.domain.model.Product
 import com.getir.finalcase.presentation.SharedProductViewModel
+import com.getir.finalcase.presentation.ProductListAdapter
 import dagger.hilt.android.AndroidEntryPoint
 
 @AndroidEntryPoint
@@ -31,10 +32,7 @@ class FragmentCart : Fragment() {
     private var _binding: FragmentCartBinding? = null
     private val binding get() = _binding!!
     private lateinit var adapter: CartItemAdapter
-
-    private var _dialogBinding: CustomAlertDialogBinding? = null
-    private val dialogBinding get() = _dialogBinding!!
-
+    private lateinit var suggestedProductListAdapter: ProductListAdapter
 
     private val viewModel: SharedProductViewModel by activityViewModels()
 
@@ -46,7 +44,6 @@ class FragmentCart : Fragment() {
     ): View {
         // Inflate the layout and initialize the binding
         _binding = FragmentCartBinding.inflate(inflater, container, false)
-        _dialogBinding =  CustomAlertDialogBinding.inflate(inflater,container,false)
 
         return binding.root
     }
@@ -59,6 +56,19 @@ class FragmentCart : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupRecyclerView()
+
+        viewModel.uiStateSuggestedProducts.observe(viewLifecycleOwner, Observer { state ->
+            when (state) {
+                is ViewState.Loading -> {
+                }
+                is ViewState.Success -> {
+                    state.result.firstOrNull()?.products?.let { suggestedProductListAdapter.updateProducts(it) }
+                }
+                is ViewState.Error -> {
+                    val errorMessage = state.error ?: "Unknown error occurred"
+                }
+            }
+        })
         binding.apply {
             toolbar.toolbarTitle.text = getString(R.string.basket)
             toolbar.backButton.visibility = VISIBLE
@@ -114,6 +124,10 @@ class FragmentCart : Fragment() {
         adapter = CartItemAdapter(emptyList(), ::onAddButtonClick, ::onMinusButtonClicked)
         binding.productsRecyclerView.layoutManager = LinearLayoutManager(requireContext())
         binding.productsRecyclerView.adapter = adapter
+
+        suggestedProductListAdapter = ProductListAdapter(emptyList(), null, ::onAddButtonClick, ::onMinusButtonClicked )
+        binding.recyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
+        binding.recyclerView.adapter = suggestedProductListAdapter
     }
 
     override fun onDestroyView() {

@@ -12,17 +12,6 @@ import javax.inject.Inject
 class BasketProductRepositoryImpl @Inject constructor(
     private val basketProductDao: BasketProductDao
 ) {
-  /*  suspend fun sss(product: Product): BaseResponse<String> {
-        val basketProduct = basketProductDao.getBasketProductById(productId = product.id!!)
-
-        return if (basketProduct != null) {
-            basketProductDao.insertBasketProduct(basketProduct)
-            BaseResponse.Success("Product has been added to the basket")
-        } else {
-            BaseResponse.Error("Basket product not found")
-        }
-    }*/
-
     suspend fun addProductToBasketIfFound(product: Product): BaseResponse<String> {
         val existingProduct = basketProductDao.getProductById(product.id)
         if(existingProduct != null) {
@@ -33,7 +22,6 @@ class BasketProductRepositoryImpl @Inject constructor(
         basketProductDao.insertProduct(productEntity)
 
         return BaseResponse.Success("Product added to the basket")
-
     }
 
     suspend fun removeProductFromBasket(product: Product): BaseResponse<String> {

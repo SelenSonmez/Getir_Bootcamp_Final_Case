@@ -4,6 +4,9 @@ import androidx.room.Entity
 import androidx.room.PrimaryKey
 import com.getir.finalcase.domain.model.Product
 
+/**
+ * Entity class representing a product in the local database.
+ */
 @Entity(tableName = "products")
 data class ProductEntity(
     @PrimaryKey val id: String,
@@ -17,6 +20,11 @@ data class ProductEntity(
     val amount: Int = 0
 )
 
+/**
+ * Extension function to convert a ProductEntity object to a Product object.
+ *
+ * @return The converted Product object.
+ */
 fun ProductEntity.toProduct(): Product =
     Product(
         id = this.id,

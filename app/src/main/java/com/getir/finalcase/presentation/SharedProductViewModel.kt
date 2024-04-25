@@ -1,6 +1,5 @@
 package com.getir.finalcase.presentation
 
-import android.util.Log
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -20,6 +19,7 @@ import kotlinx.coroutines.flow.onEach
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
+// Shared View Model class for accessing and managing liveData's
 @HiltViewModel
 class SharedProductViewModel @Inject constructor(
     private val productListUseCase: ProductListUseCase,
@@ -37,7 +37,9 @@ class SharedProductViewModel @Inject constructor(
 
     private var isDataFetched: Boolean = false
 
-     fun getAllProducts() {
+
+    // Method for fetching products lists from useCase except suggestedProducts
+     private fun getAllProducts() {
          viewModelScope.launch {
              productListUseCase.execute()
                  .map { baseResponse ->
@@ -64,15 +66,12 @@ class SharedProductViewModel @Inject constructor(
          }
     }
 
-    suspend fun loadSaveData(liveData: MutableLiveData<ViewState<List<ProductCategory>>>) {
-        // Eğer bir product savede varsa amountunu savedeki olanla eşitle
+    // Check if product is in local database, and update the liveData accordingly
+    private suspend fun loadSaveData(liveData: MutableLiveData<ViewState<List<ProductCategory>>>) {
         val currentProducts =  mutableListOf<Product>()
         liveData.value.let { viewState ->
-            // Check if the viewState is a Success
             if (viewState is ViewState.Success) {
-                // Access the product list
                 viewState.result.firstOrNull()?.products?.forEach { product ->
-                    // Call the repository to get product details by ID
                     val response = basketProductRepository.getBasketProductById(product.id)
                     if(response is BaseResponse.Success) {
                         if(response.data != null ) {
@@ -88,12 +87,12 @@ class SharedProductViewModel @Inject constructor(
         uiStateProductInBasket.notifyObserver()
     }
 
-    fun getSuggestedProducts() {
+    // Get the suggested products from use case and handle states
+    private fun getSuggestedProducts() {
         suggestedProductUseCase.execute()
             .map { baseResponse ->
                 when (baseResponse) {
                     is BaseResponse.Success -> {
-                        Log.v("selen",baseResponse.data.toString())
                         ViewState.Success(baseResponse.data)
                     }
                     is BaseResponse.Error -> ViewState.Error(baseResponse.message)
@@ -109,9 +108,9 @@ class SharedProductViewModel @Inject constructor(
             .launchIn(viewModelScope)
     }
 
+    // Add the given product to the basket or increment it's amount
      fun addProductToBasketIfFound(product: Product) {
          val currentProducts =  mutableListOf<Product>()
-
 
          uiStateProductInBasket.value?.let {
              for(previousProduct in it){
@@ -125,6 +124,7 @@ class SharedProductViewModel @Inject constructor(
              if(responseIfDuplicateProduct is BaseResponse.Error){
                  val response = basketProductRepository.addProductToBasket(product)
                  if(response is BaseResponse.Success) {
+                     // Update the UI state with the new product list
                      currentProducts.add(product)
                      uiStateProductInBasket.value = currentProducts
                      ViewState.Success("Product added to basket successfully")
@@ -132,9 +132,13 @@ class SharedProductViewModel @Inject constructor(
              }else{
                 basketProductRepository.increaseProductCount(product.id)
              }
+
+             // Notify observers about the changes in UI state
              uiStateProducts.notifyObserver()
              uiStateSuggestedProducts.notifyObserver()
              uiStateProductInBasket.notifyObserver()
+
+             // Recalculate the total amount in the basket
              calculateAmount()
          }
     }
@@ -186,13 +190,11 @@ class SharedProductViewModel @Inject constructor(
         }
     }
 
-    fun calculateAmount() {
+    private fun calculateAmount() {
         var count = 0.0
         uiStateProductInBasket.value.let {
             it?.forEach { product ->
-                Log.v("welene",product.toString())
                 if(product.price != null) {
-                    Log.v("selendene"," $product ${product.price} * ${product.amount}")
                     count += product.price * product.amount
                 }
             }

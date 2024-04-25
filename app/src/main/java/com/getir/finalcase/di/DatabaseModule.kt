@@ -9,11 +9,18 @@ import dagger.hilt.InstallIn
 import dagger.hilt.android.qualifiers.ApplicationContext
 import dagger.hilt.components.SingletonComponent
 import javax.inject.Singleton
-
+/**
+ * Dagger module class providing dependencies related to the database.
+ */
 @Module
 @InstallIn(SingletonComponent::class)
 object DatabaseModule {
-
+    /**
+     * Provides the BasketRoomDatabase instance.
+     *
+     * @param context The application context.
+     * @return The BasketRoomDatabase instance.
+     */
     @Singleton
     @Provides
     fun provideBasketRoomDatabase(@ApplicationContext context: Context): BasketRoomDatabase {

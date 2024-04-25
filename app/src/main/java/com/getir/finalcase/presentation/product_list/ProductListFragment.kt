@@ -15,6 +15,7 @@ import com.getir.finalcase.R
 import com.getir.finalcase.common.domain.ViewState
 import com.getir.finalcase.databinding.FragmentProductListBinding
 import com.getir.finalcase.domain.model.Product
+import com.getir.finalcase.presentation.ProductListAdapter
 import com.getir.finalcase.presentation.SharedProductViewModel
 import com.google.android.material.snackbar.Snackbar
 import dagger.hilt.android.AndroidEntryPoint
@@ -68,13 +69,10 @@ class ProductListFragment : Fragment() {
                     binding.loadingProgressBar.visibility = View.VISIBLE
                 }
                 is ViewState.Success -> {
-                    // Update UI with the list of products
                     binding.loadingProgressBar.visibility = View.GONE
                     state.result.firstOrNull()?.products?.let { suggestedProductListAdapter.updateProducts(it) }
-                    val productList = state.result
                 }
                 is ViewState.Error -> {
-                    // Show error message
                     val errorMessage = state.error ?: "Unknown error occurred"
                 }
             }
@@ -111,10 +109,6 @@ class ProductListFragment : Fragment() {
         suggestedProductListAdapter = ProductListAdapter(emptyList(), ::onItemClicked, ::onAddButtonClick, ::onDeleteButtonClick)
         binding.productHorizontalRecyclerView.layoutManager = LinearLayoutManager(requireContext(), LinearLayoutManager.HORIZONTAL, false)
         binding.productHorizontalRecyclerView.adapter = suggestedProductListAdapter
-    }
-
-    private fun fetchSuggestedProducts() {
-        viewModel.getSuggestedProducts()
     }
 
     private fun onItemClicked(product: Product) {

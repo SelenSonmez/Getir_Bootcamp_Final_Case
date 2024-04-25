@@ -2,7 +2,6 @@ package com.getir.finalcase.domain.usecase
 
 import com.getir.finalcase.common.domain.NoParaMeterUseCase
 import com.getir.finalcase.domain.model.BaseResponse
-import com.getir.finalcase.domain.model.Product
 import com.getir.finalcase.domain.model.ProductCategory
 import com.getir.finalcase.domain.repository.ProductListRepository
 import kotlinx.coroutines.flow.Flow

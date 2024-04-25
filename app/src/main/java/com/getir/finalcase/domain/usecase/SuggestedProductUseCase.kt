@@ -12,5 +12,4 @@ class SuggestedProductUseCase @Inject constructor(
     private val productListRepository: ProductListRepository,
 ): NoParaMeterUseCase<Flow<BaseResponse<List<ProductCategory>>>>{
     override fun execute(): Flow<BaseResponse<List<ProductCategory>>>  = productListRepository.getAllHorizontalProducts()
-
 }
